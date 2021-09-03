@@ -4,5 +4,7 @@ public class Main {
         System.out.println("This is the original strand: "+dna.sequence);
         System.out.println("This is the complementary strand: "+dna.complementaryStrand().sequence);
         System.out.println("Each strand has "+dna.numberNucleotides+" nucleotides.");
+        dna.count(false);
+        dna.count(true);
     }
 }
