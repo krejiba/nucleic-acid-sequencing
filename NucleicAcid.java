@@ -1,53 +1,40 @@
-public class NucleicAcid {
-    String sequence;
-    int numberNucleotides;
+public class NucleicAcid extends Macromolecule {
+    int numberOfNucleotides;
     char[] nucleotides;
 
     NucleicAcid() {
         this.sequence = "" ;
-        this.numberNucleotides = 0;
+        this.numberOfNucleotides = 0;
+        this.nucleotides = new char[4];
     }
     NucleicAcid(String sequence) {
         this.sequence = sequence ;
-        this.numberNucleotides = sequence.length();
-        this.nucleotides = new char[]{'A', 'C', 'G', '*'};
-    }
-
-    boolean isValid(String sequence, String testSet) {
-        boolean test = true;
-        for(int i = 0; i < sequence.length(); i++) {
-            if (testSet.indexOf(sequence.charAt(i)) == -1) {
-                test = false;
-                break;
-            }
-        }
-        return test;
+        this.numberOfNucleotides = sequence.length();
+        this.nucleotides = new char[]{'A', 'C', 'G', '*'};  // * is a placeholder for T in DNA and for U in RNA
     }
 
     NucleicAcid complementaryStrand() {
         StringBuilder complementarySequence = new StringBuilder();
-        for (int i=0; i<this.numberNucleotides; i++) {
+        for (int i=0; i<this.numberOfNucleotides; i++) {
+
             char c = this.sequence.charAt(i);
 
-            if (c == this.nucleotides[0]) {
-                complementarySequence.append(this.nucleotides[3]);
-            } else if (c == this.nucleotides[1]) {
-                complementarySequence.append(this.nucleotides[2]);
-            }  else if (c == this.nucleotides[2]) {
-                complementarySequence.append(this.nucleotides[1]);
-            } else {
-                complementarySequence.append(this.nucleotides[0]);
+            for (int j=0; j<4; j++) {
+                if (c == this.nucleotides[j]) {
+                    complementarySequence.append(this.nucleotides[3-j]);
+                }
             }
+
         }
         return new NucleicAcid(complementarySequence.toString());
 
     }
 
-
     void count(boolean normalize) {
         int[] countOfNucleotides = new int[]{0, 0, 0, 0};
+        float[] percentageOfNucleotides = new float[]{0, 0, 0, 0};
 
-        for (int i=0; i<this.numberNucleotides; i++) {
+        for (int i=0; i<this.numberOfNucleotides; i++) {
             char c = this.sequence.charAt(i);
             for (int j=0; j<4; j++) {
                 if (c == this.nucleotides[j]) {
@@ -56,18 +43,13 @@ public class NucleicAcid {
             }
         }
 
-        if (normalize == false) {
-            System.out.println(this.nucleotides[0]+": " + countOfNucleotides[0]);
-            System.out.println(this.nucleotides[1]+": " + countOfNucleotides[1]);
-            System.out.println(this.nucleotides[2]+": " + countOfNucleotides[2]);
-            System.out.println(this.nucleotides[3]+": " + countOfNucleotides[3]);
-        } else {
-            System.out.println(this.nucleotides[0]+"%: " + countOfNucleotides[0] / (double) this.numberNucleotides*100);
-            System.out.println(this.nucleotides[1]+"%: " + countOfNucleotides[1] / (double) this.numberNucleotides*100);
-            System.out.println(this.nucleotides[2]+"%: " + countOfNucleotides[2] / (double) this.numberNucleotides*100);
-            System.out.println(this.nucleotides[3]+"%: " + countOfNucleotides[3] / (double) this.numberNucleotides*100);
-
+        for (int j=0; j<4; j++) {
+            percentageOfNucleotides[j] = (float) countOfNucleotides[j] * 100 / this.numberOfNucleotides;
+            if (!normalize) {
+                System.out.println(this.nucleotides[j]+": " + countOfNucleotides[j]);
+            } else {
+                System.out.println(this.nucleotides[j]+"%: " + percentageOfNucleotides[j]);
+            }
         }
     }
-
 }
